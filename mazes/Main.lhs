@@ -1,5 +1,5 @@
 > import Geography
-> import Maze 
+> import MyMazeTree
 
 ======================================================================
 
@@ -12,7 +12,7 @@ Draw a maze.
 
 
 > drawMaze :: Maze -> IO()
-> drawMaze mz@(Maze (x, y) _) = putStr((concat ["+--" | _<-[0..x-1]]) ++ "+\n" ++concat (([getLine_ d | d<-[y-1,y-2..0]])))
+> drawMaze mz@(Maze (x, y) _ _ _ _) = putStr((concat ["+--" | _<-[0..x-1]]) ++ "+\n" ++concat (([getLine_ d | d<-[y-1,y-2..0]])))
 >     where getLine_ n = '|' : getSides n ++ "\n" ++ getBottoms n ++ "\n"
 >           getSides n = concat [if hasWall mz (currentX, n) E then "  |" else "   "| currentX<-[0..x-1]]
 >           getBottoms n = "+" ++ concat [if hasWall mz (currentX, n) S then "--+" else "  +"| currentX<-[0..x-1]]
@@ -108,9 +108,22 @@ And here is the maze.
 >         run (18,18) 2 N ++ run (20,20) 3 N
 >   in makeMaze (23,22) walls
 
+> spiralMaze :: Maze 
+> spiralMaze = 
+>   let walls = 
+>         run (0,0) 5 E ++ run (1,4) 4 N ++ run (5,5) 6 E ++ run (4,1) 4 E ++ run (2,0) 3 N ++ run (1,1) 3 E ++ run (2,3) 2 N ++ run (3,2) 2 E ++ run (3,1) 1 N ++ run (2,2) 1 E
+>         
+>   in makeMaze (6,6) walls
+
 And now an impossible maze
 
 > impossibleMaze :: Maze
 > impossibleMaze =
 >   let walls = [((0,1), E), ((1,0),N), ((1,2), E), ((2,1), N)]
 >   in makeMaze (3,3) walls
+
+
+comparison: 
+with MyMaze: (0.01 secs, 1,863,512 bytes)
+with Maze: (0.06 secs, 2,623,320 bytes)
+with MyMazeTree: (0.01 secs, 9,376,392 bytes)
